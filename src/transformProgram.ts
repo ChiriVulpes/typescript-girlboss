@@ -20,7 +20,6 @@ export function transformProgram (
 	const sourceFiles = program.getSourceFiles();
 
 	const plugins = GirlbossPlugin.getProgramTransformerPlugins();
-	console.log(plugins)
 
 	const transformedSource = tsInstance.transform(
 		sourceFiles.filter(sourceFile => rootFileNames.includes(sourceFile.fileName)),
