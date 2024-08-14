@@ -14,6 +14,8 @@ export interface GirlbossASTTransformationAPI {
 
 export type GirlbossASTTransformer = (api: GirlbossASTTransformationAPI) => ts.Node | undefined | void;
 
+export type GirlbossDiagnosticFilter = (diagnostic: ts.Diagnostic) => any;
+
 export interface GirlbossDiagnosticsTransformerAPI {
 	/**
 	 * The current node.
@@ -28,10 +30,16 @@ export interface GirlbossDiagnosticsTransformerAPI {
 	 */
 	getNodeDiagnostics (): ts.Diagnostic[];
 	/**
-	 * Remove diagnostics for the current node.
-	 * @param filter An optional filter to only remove some diagnostics on this node
+	 * Remove diagnostics for the given node.
+	 * @param node The node to remove diagnostics on
+	 * @param filter An optional filter that returns a truthy value for any diagnostics that should be removed
 	 */
-	removeNodeDiagnostics (filter?: (diagnostic: ts.Diagnostic) => any): void;
+	removeNodeDiagnostics (node: ts.Node, filter?: GirlbossDiagnosticFilter): void;
+	/**
+	 * Remove diagnostics for the current node.
+	 * @param filter An optional filter that returns a truthy value for any diagnostics that should be removed
+	 */
+	removeNodeDiagnostics (filter?: GirlbossDiagnosticFilter): void;
 }
 
 export type GirlbossDiagnosticsTransformer = (api: GirlbossDiagnosticsTransformerAPI) => ts.Diagnostic[] | undefined | void;
