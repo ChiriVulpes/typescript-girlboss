@@ -1,0 +1,20 @@
+{
+	"name": "typescript-girlboss",
+	"description": "Time to gaslight typescript! :3",
+	"version": "0.0.1",
+	"scripts": {
+		"build": "npx tsc",
+		"watch": "npx tsc -w --pretty",
+		"check": "npx tspc --project ./test/tsconfig.json"
+	},
+	"main": "build/index.js",
+	"types": "build/indextypes.d.ts",
+	"dependencies": {
+		"typescript": "5.6.0-dev.20240812",
+		"ts-patch": "3.2.1"
+	},
+	"devDependencies": {
+		"ts-expose-internals": "5.5.3",
+		"@types/node": "20.14.9"
+	}
+}

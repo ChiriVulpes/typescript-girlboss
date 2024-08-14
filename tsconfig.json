@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"target": "es2022",
+		"esModuleInterop": true,
+		"moduleResolution": "Node16",
+		"module": "Node16",
+		"outDir": "build",
+		"strict": true,
+		"declaration": true
+	},
+	"include": ["src/**/*.ts"]
+}
