@@ -6,7 +6,7 @@ import GirlbossPlugin from "./Plugin";
 import transformAst from "./transformAst";
 import transformDiagnostics from "./transformDiagnostics";
 
-export function transformProgram (
+export default function transformProgram (
 	program: Program,
 	host: CompilerHost | undefined,
 	config: PluginConfig,
