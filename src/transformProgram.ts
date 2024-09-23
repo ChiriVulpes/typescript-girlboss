@@ -1,6 +1,6 @@
 import type { } from "ts-expose-internals";
 import { PluginConfig, ProgramTransformerExtras } from "ts-patch";
-import ts, { CompilerHost, CompilerOptions, Program, SourceFile } from "typescript";
+import ts, { CompilerHost, CompilerOptions, Diagnostic, Program, SourceFile } from "typescript";
 import Config from "./Config";
 import GirlbossPlugin from "./Plugin";
 import transformAst from "./transformAst";
@@ -34,13 +34,19 @@ export default function transformProgram (
 	for (const key of Object.keys(newProgram))
 		(program as any)[key] = (newProgram as any)[key];
 
-	const originalGetSemanticDiagnostics = program.getSemanticDiagnostics.bind(program);
-	program.getSemanticDiagnostics = (sourceFile, cancellationToken) => {
-		const diagnostics = originalGetSemanticDiagnostics(sourceFile, cancellationToken).slice();
-		return transformDiagnostics(diagnostics, plugins);
-	};
+	applyDiagnosticsTransformer(program, "getSemanticDiagnostics", plugins);
+	applyDiagnosticsTransformer(program, "getBindAndCheckDiagnostics", plugins);
 
 	return program;
+}
+
+function applyDiagnosticsTransformer<PROGRAM extends ts.Program | ts.BuilderProgram> (program: PROGRAM, getDiagnosticType: keyof PROGRAM, plugins: readonly GirlbossPlugin[]) {
+	type DiagnosticFunction = (...args: never[]) => Diagnostic[];
+	const originalGetDiagnostics = (program[getDiagnosticType] as DiagnosticFunction).bind(program);
+	(program[getDiagnosticType] as DiagnosticFunction) = (...params) => {
+		const diagnostics = originalGetDiagnostics(...params)?.slice();
+		return transformDiagnostics(diagnostics as Diagnostic[], plugins);
+	};
 }
 
 function getPatchedHost (
